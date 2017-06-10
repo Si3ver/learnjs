@@ -1,2 +1,2 @@
 # liao_js
-廖雪峰的js教程
+廖雪峰的javascript教程
