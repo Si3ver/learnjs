@@ -356,18 +356,84 @@ console.log(instance.getSuperValue());  //true
   - instance instanceof XXX
   - XXX.prototype.isPrototypeOf(instance)
 3. 谨慎地定义方法
+  - 不要使用对象字面量创建原型方法，它会重写原型链，导致切断原型链。
 4. 原型链的问题
+  - 由于原型中包含引用类型值所带来的的问题。如下例中，SubType的所有实例都会共享一个colors属性。
+  - 创建子类型的实例时，无法向超类型的构造函数传递参数。
 
+```javascript
+function SuperType(){
+  this.colors = ["red", "blue", "green"];
+}
 
-### 6.3.2 借用构造函数
+function SubType(){}
+SubType.prototype = new SuperType();
 
+var instance1 = new SubType();
+instance1.colors.push("black");
+console.log(instance1.colors);    //["red", "blue", "green", "black"]
 
+var instance2 = new SubType();
+console.log(instance2.colors);    //["red", "blue", "green", "black"]
+```
+
+### 6.3.2 借用构造函数（伪造对象\经典继承）
+
+```javascript
+function SuperType(){
+  this.colors = ["red", "blue", "green"];
+}
+
+function SubType(){
+  SuperType.call(this);
+}
+
+var instance1 = new SubType();
+instance1.colors.push("black");
+console.log(instance1.colors);    //["red", "blue", "green", "black"]
+
+var instance2 = new SubType();
+console.log(instance2.colors);    //["red", "blue", "green"]
+```
 
 ### 6.3.3 组合继承
 
++ 原型属性和方法 -> 原型链实现继承 sayName()
++ 借用构造函数 -> 对实例属性继承 name, colors
+
+```javascript
+function SuperType(name){
+  this.name = name;
+  this.colors = ["blue", "red", "green"];
+}
+SuperType.prototype.sayName = function(){
+  console.log(this.name);
+};
+
+function SubType(name, age) {
+  SuperType.call(this, name);   //~借用构造函数 -> 实例属性 name, colors
+  this.age = age;
+}
+SubType.prototype = new SuperType();  //~原型链 -> 原型属性&原型方法sayName()
+SubType.prototype.constructor = SubType;
+SubType.prototype.sayAge = function(){
+  console.log(this.age);
+}
+
+var instance1 = new SubType("william", 22);
+instance1.colors.push("black");
+console.log(instance1.colors);    //["red", "blue", "green", "black"]
+instance1.sayName();              //william
+instance1.sayAge();               //22
+
+var instance2 = new SubType("si1ver", 25);
+console.log(instance2.colors);    //["red", "blue", "green"]
+instance2.sayName();              //si1ver
+instance2.sayAge();               //25
+```
+
 ### 6.3.4 原型式继承
-
 ### 6.3.5 寄生式继承
-
 ### 6.3.6 寄生组合式继承
 
+可选~
