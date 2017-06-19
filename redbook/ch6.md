@@ -13,12 +13,12 @@
   - [[Configurable]]、[[Enumerable]]、[[Get]]、[[Set]];
   - 访问器属性不能直接定义，必须用Object.defineProperty()来定义。
 
-```
+```javascript
 console.log(Object.getOwnPropertyDescriptor(window, "undefined"));
 		//Object {value: undefined, writable: false, enumerable: false, configurable: false}
 ```
 
-```
+```javascript
 var coolguy = {
   name: "william chow",
   _age: 22,
@@ -62,7 +62,7 @@ console.log(Object.getOwnPropertyDescriptor(coolguy, "edition"));
 
 Object.defineProperties()
 
-```
+```javascript
 var book = {};
 
 Object.defineProperties(book, {
@@ -95,7 +95,7 @@ Object.defineProperties(book, {
 
 #### 1. 工厂模式
 
-```
+```javascript
 function createPerson(name, age, job) {
   var o = new Object();
   o.name = name;
@@ -145,7 +145,7 @@ console.log(person2);
 
 注：下例中，Person()是person1与person2两个实例对象的构造函数，其prototype属性指向函数的原型对象Person Prototype。
 
-```
+```javascript
 function Person() {}
 Person.prototype.name = "william";
 Person.prototype.age = 22;
@@ -182,7 +182,7 @@ console.log(Object.keys(person2));          //[]
 
 对象字面量形式来重写原型对象（慎重，会切断现有实例与新原型之间的联系，详见P157图）。
 
-```
+```javascript
 function Person(){}
 Person.prototype = {
   name: "william",
@@ -210,7 +210,7 @@ friend.sayHi();
 
 #### 组合使用构造函数模式和原型模式（集两种模式之长，最常用）
 
-```
+```javascript
 function Person(name, age, job) {
   this.name = name;
   this.age = age;
@@ -233,7 +233,9 @@ console.log(person1.sayName == person2.sayName);    //true
 
 #### 动态原型模式
 
-```
+所有信息都封装在了构造函数中，兼具前一种方法两优点。
+
+```javascript
 function Person(name, age, job) {
   this.name = name;
   this.age = age;
@@ -250,7 +252,7 @@ function Person(name, age, job) {
 
 #### 寄生器构造函数模式
 
-```
+```javascript
 function Person(name, age, job){
   var o = new Object();
   o.name = name;
