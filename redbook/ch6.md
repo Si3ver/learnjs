@@ -1,8 +1,8 @@
-## 6. OOP
+# 6. OOP
 
-### 6.1 理解对象
+## 6.1 理解对象
 
-#### 属性类型
+### 属性类型
 
 1. 数据属性
   - [[configurable]]、[[Enumerable]]、[[Writable]]、[[value]]，默认全为true;
@@ -91,9 +91,9 @@ Object.defineProperties(book, {
 });
 ```
 
-### 6.2 创建对象
+## 6.2 创建对象
 
-#### 1. 工厂模式
+### 6.2.1 工厂模式
 
 ```javascript
 function createPerson(name, age, job) {
@@ -115,7 +115,7 @@ console.log(person2);
 
 缺点：对象识别困难。所创建的对象只能instanceof到Object这一级。
 
-### 2. 构造函数模式
+### 6.2.2 构造函数模式
 
 ```javascript
 function Person(name, age, job) {
@@ -136,7 +136,7 @@ console.log(person2);
 缺点：上述代码对象和函数绑定，每个Person对象都会有一份sayName()代码。
 如果改进，指向一个全局函数，则封装性又太差，导致全局函数很乱。
 
-### 3. 原型模式
+### 6.2.3 原型模式
 
 + XXX.prototype指向一个对象，叫做原型对象。(XXX是一个构造函数，即Function对象)
 + hasOwnProperty()检测该实例是否具有某属性，以确定访问的是实例属性还是原型对象的属性。
@@ -208,7 +208,7 @@ Person.prototype.sayHi = function() {
 friend.sayHi();
 ```
 
-#### 组合使用构造函数模式和原型模式（集两种模式之长，最常用）
+### 6.2.4 组合使用构造函数模式和原型模式（集两种模式之长，最常用）
 
 ```javascript
 function Person(name, age, job) {
@@ -231,7 +231,7 @@ person2.sayName();        //si1ver
 console.log(person1.sayName == person2.sayName);    //true
 ```
 
-#### 动态原型模式
+### 6.2.5 动态原型模式
 
 所有信息都封装在了构造函数中，兼具前一种方法两优点。
 
@@ -250,7 +250,7 @@ function Person(name, age, job) {
 }
 ```
 
-#### 寄生器构造函数模式
+### 6.2.6 寄生器构造函数模式
 
 ```javascript
 function Person(name, age, job){
@@ -267,3 +267,107 @@ function Person(name, age, job){
 var friend = new Person("william", 22, "master candidate");
 friend.sayName();       //william
 ```
+
+寄生器构造函数体内部和工厂模式一样。
+该模式可以在特殊情况下用来为对象创建构造函数。例如，想创建一个具有自定义方法的特殊数组，而又不可能修改原生Array()构造函数，则可用该模式实现。
+
+```javascript
+function SpecialArray(){
+  //创建数组
+  var values = new Array();
+
+  //添加值
+  values.push.apply(values, arguments);
+
+  //添加方法
+  values.toPipedString = function() {
+    return this.join("|");
+  };
+
+  //返回数组
+  return values;
+}
+
+var colors = new SpecialArray("red", "blue", "green");
+console.log(colors.toPipedString());          //red|blue|green
+console.log(colors instanceof Array);         //true
+console.log(colors instanceof SpecialArray);  //false
+```
+
+### 6.2.7 稳妥构造函数模式
+
+适合在一些安全的环境中（禁用new, this）, 或者防止数据被其他应用程序（如Mashup程序）改动时使用。
+
+***不使用new调用构造函数***。
+
+除了调用方法，没有其他方式访问其数据成员的值。
+
+```javascript
+function Person(name, age, job){
+  var o = new Object();
+
+  //private members
+  var nameUC = name.toUpperCase();
+
+  //public members
+  o.sayName = function(){
+    console.log(name);
+  };
+  o.sayNameUC = function(){
+    console.log(nameUC);
+  }
+
+  return o;
+}
+
+var person1 = Person("william", 22, "master candidate");
+person1.sayName();            //william
+person1.sayNameUC();          //WILLIAM
+console.log(person1.name);    //undefined 私有成员无法访问
+console.log(person1.nameUC);  //undefined
+```
+
+## 6.3 继承
+
+### 6.3.1 原型链
+
+```javascript
+function SuperType(){
+  this.property = true;
+}
+SuperType.prototype.getSuperValue = function(){
+  return this.property;
+};
+
+function SubType(){
+  this.subproperty = false;
+}
+SubType.prototype = new SuperType();
+SubType.prototype.getSubValue = function() {
+  return this.subproperty;
+};
+
+var instance = new SubType();
+console.log(instance.getSuperValue());  //true
+```
+
+1. 别忘记默认的原型 Object.prototype
+2. 确定原型XXX(Object/SuperType/SubType)和实例instance的关系 
+  - instance instanceof XXX
+  - XXX.prototype.isPrototypeOf(instance)
+3. 谨慎地定义方法
+4. 原型链的问题
+
+
+### 6.3.2 借用构造函数
+
+
+
+### 6.3.3 组合继承
+
+### 6.3.4 原型式继承
+
+### 6.3.5 寄生式继承
+
+### 6.3.6 寄生组合式继承
+
