@@ -65,3 +65,5 @@ function createComperation(propertyName) {
 var c = createComperation("age");
 console.log(c(p1, p2));				//-1
 ```
+
+[第六章](https://github.com/Si3ver/learnjs/blob/master/redbook/ch6.md)

@@ -437,3 +437,6 @@ instance2.sayAge();               //25
 ### 6.3.6 寄生组合式继承
 
 可选~
+
+[第一到五章](https://github.com/Si3ver/learnjs/blob/master/redbook/ch1-5.md)
+[第七章](https://github.com/Si3ver/learnjs/blob/master/redbook/ch7.md)
